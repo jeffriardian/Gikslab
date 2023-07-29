@@ -4,6 +4,7 @@ using Gikslab.Core.Models;
 using Gikslab.Repository.Data;
 using Gikslab.Service.Filters;
 using Gikslab.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ namespace Gikslab.API.Controllers
 {
     [Route("v1")]
     [ApiController]
+    [Authorize]
     public class ActivityController : BaseApiController
     {
         private readonly RepositoryContext _context;
@@ -24,6 +26,7 @@ namespace Gikslab.API.Controllers
 
         [HttpPost("activity")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [Authorize(Roles = "expert")]
         public async Task<IActionResult> CreateActivity([FromBody] ActivityCreationDto activity)
         {
             try
@@ -60,6 +63,7 @@ namespace Gikslab.API.Controllers
 
         [HttpPut("activity/{id}")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [Authorize(Roles = "expert")]
         public async Task<IActionResult> UpdateActivity(int id, [FromBody] ActivityUpdateDto activity)
         {
             try
@@ -78,6 +82,7 @@ namespace Gikslab.API.Controllers
         }
 
         [HttpDelete("activity/{id}")]
+        [Authorize(Roles = "expert")]
         public async Task<IActionResult> DeleteActivity(int id)
         {
             try

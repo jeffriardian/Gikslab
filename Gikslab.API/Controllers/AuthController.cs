@@ -2,12 +2,14 @@
 using Gikslab.Core.DTO;
 using Gikslab.Service.Filters;
 using Gikslab.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gikslab.API.Controllers
 {
     [Route("v1")]
     [ApiController]
+    [Authorize]
     public class AuthController : BaseApiController
     {
         public AuthController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper) :
@@ -17,6 +19,7 @@ namespace Gikslab.API.Controllers
         [HttpPost("user")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateRoleExists))]
+        [Authorize(Roles = "board")]
         public async Task<IActionResult> RegisterUser([FromBody] UserRegistrationDto userRegistration, string role)
         {
             var userResult = await _repository.UserAuthentication.SignUpUserAsync(userRegistration, role);
@@ -25,6 +28,7 @@ namespace Gikslab.API.Controllers
 
         [HttpPost("auth/login")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [AllowAnonymous]
         public async Task<IActionResult> Authenticate([FromBody] UserLoginDto user)
         {
             return !await _repository.UserAuthentication.SignInUserAsync(user)

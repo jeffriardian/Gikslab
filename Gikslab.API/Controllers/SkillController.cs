@@ -8,6 +8,7 @@ namespace Gikslab.API.Controllers
 {
     [Route("v1")]
     [ApiController]
+    [Authorize]
     public class SkillController : BaseApiController
     {
         public SkillController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper) : base(repository, logger, mapper) { }
